@@ -127,7 +127,7 @@ export default function App() {
           >
             <Controls
               className="flex flex-col p-3 rounded-[10px] bg-white"
-              position="top-right"
+              position="bottom-left"
             />
             <MiniMap zoomable pannable className="h-[120px]" />
             <Background color="#dee2e6" gap={18} variant={BackgroundVariant.Dots} size={2} />
