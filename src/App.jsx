@@ -20,7 +20,9 @@ const nodeTypes = {
 const edgeStyle = {
   strokeWidth: 9,
   stroke: '#d9d9d9',
-  borderRadius: "100%"
+  borderRadius: "100%",
+  strokeLinecap: "round",
+  zIndex: 100,
 }
 
 const initialNodes = [

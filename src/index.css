@@ -17,8 +17,6 @@ body{
   opacity: 50%;
 }
 
-.react-flow__edge{
-  stroke-width: 100px;
-  height: 100px;
-  width: 100px;
+.custom-node svg{
+  color: #f5cb5c;
 }

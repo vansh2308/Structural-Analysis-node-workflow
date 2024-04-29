@@ -12,13 +12,13 @@ export default function CustomNode({ id, data }) {
   function supportImg(supportType) {
     switch (supportType) {
       case "fixed":
-        return <img src={FixedSVG} />
+        return <img src={FixedSVG}/>
       case "pinned":
-        return <img src={PinnedSVG} />
+        return <img src={PinnedSVG}/>
       case "roller":
-        return <img src={RollerSVG} />
+        return <img src={RollerSVG}/>
       default:
-        return <img src={RollerSVG} />
+        return <img src={RollerSVG}/>
     }
   }
 
