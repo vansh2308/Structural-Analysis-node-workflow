@@ -17,6 +17,12 @@ body{
   opacity: 50%;
 }
 
-.custom-node svg{
-  color: #f5cb5c;
+.dndflow .dndnode{
+  cursor: grab;
+  border-bottom: 1px solid #d9d9d9cb;
 }
+.sidebar{
+  border: 1px solid #d9d9d9cb;
+  box-shadow: 0 0 10px #d9d9d9cb;
+}
+

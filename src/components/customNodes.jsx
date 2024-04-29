@@ -3,7 +3,7 @@ import { Position, Handle } from "reactflow";
 import FixedSVG from "./../assets/fixed.svg"
 import PinnedSVG from "./../assets/pinned.svg"
 import RollerSVG from "./../assets/roller.svg"
-import SimpleSVG from "./../assets/simple.svg"
+
 
 
 

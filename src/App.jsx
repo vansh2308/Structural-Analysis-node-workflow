@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import ReactFlow, {
   Background,
   useNodesState,
@@ -6,13 +6,15 @@ import ReactFlow, {
   Controls,
   MiniMap,
   BackgroundVariant,
-  applyNodeChanges, 
+  applyNodeChanges,
   applyEdgeChanges,
-  addEdge
+  addEdge,
+  ReactFlowProvider
 } from "reactflow";
 import "reactflow/dist/style.css";
 import CustomNode from "./components/customNodes";
 import { data } from "autoprefixer";
+import Sidebar from "./components/Sidebar";
 
 const nodeTypes = {
   custom: CustomNode
@@ -29,36 +31,43 @@ const initialNodes = [
   {
     id: '1',
     type: 'custom',
-    position: { x: 0, y: 0 },
-    data: {label: "roller"}
+    position: { x: -100, y: -100 },
+    data: { label: "roller" }
   },
   {
     id: '2',
     type: "custom",
     position: { x: 100, y: 100 },
-    data: {label: "pinned"}
+    data: { label: "pinned" }
   },
   {
     id: '3',
     type: "custom",
     position: { x: -100, y: 100 },
-    data: {label: "fixed"}
+    data: { label: "fixed" }
   },
   {
     id: '4',
     type: "custom",
     position: { x: -100, y: 200 },
-    data: {label: "simple"}
+    data: { label: "simple" }
   },
 ];
 
-const initialEdges = [
-  { id: '1-2', source: '1', target: '2', label: 'to the', type: 'straight' },
-];
+
+
+
+
+let id = 5;
+const getId = () => `${id++}`;
+
+
 
 export default function App() {
+  const reactFlowWrapper = useRef(null);
   const [nodes, setNodes] = useState(initialNodes)
   const [edges, setEdges] = useState([])
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
     [],
@@ -68,32 +77,67 @@ export default function App() {
     [],
   );
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge({type: 'straight', style: edgeStyle, ...params}, eds)),
+    (params) => setEdges((eds) => addEdge({ type: 'straight', style: edgeStyle, ...params }, eds)),
     [],
+  );
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
+      const type = event.dataTransfer.getData('application/reactflow');
+      if (typeof type === 'undefined' || !type) {
+        return;
+      }
+      const position = {x: 0, y:0}
+      const newNode = {
+        id: getId(),
+        type: "custom",
+        position,
+        data: { label: `${type}` },
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [reactFlowInstance],
   );
 
 
 
   return (
-    <ReactFlow
-      fitView
-      className=" w-screen h-screen absolute"
-      nodes={nodes}
-      onNodesChange={onNodesChange}
-      edges={edges}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      nodeTypes={nodeTypes}
-
-    >
-      <Controls
-        className="flex flex-col p-3 rounded-[10px] bg-white"
-      />
-      <MiniMap zoomable pannable className="h-[120px]" />
-      <Background color="#dee2e6" gap={18} variant={BackgroundVariant.Dots} size={2} />
+    <div className="dndflow h-screen w-screen relative">
+      <ReactFlowProvider>
+        <div className="reactflow-wrapper" ref={reactFlowWrapper}>
 
 
-    </ReactFlow>
+          <ReactFlow
+            fitView
+            className=" w-full h-screen absolute"
+            nodes={nodes}
+            onNodesChange={onNodesChange}
+            edges={edges}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            nodeTypes={nodeTypes}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+          >
+            <Controls
+              className="flex flex-col p-3 rounded-[10px] bg-white"
+              position="top-right"
+            />
+            <MiniMap zoomable pannable className="h-[120px]" />
+            <Background color="#dee2e6" gap={18} variant={BackgroundVariant.Dots} size={2} />
+
+
+          </ReactFlow>
+        </div>
+        <Sidebar />
+      </ReactFlowProvider>
+    </div>
   );
 };
 
